@@ -8,13 +8,17 @@ namespace Comandas.Api.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        // lista usuarios
+
+
+        // iresult  que retorna a lista de usuarios
         // GET: api/<UsuarioController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
-
+        // iresult  que retorna um usuario pelo id
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
         public string Get(int id)

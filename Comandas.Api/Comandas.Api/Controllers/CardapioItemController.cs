@@ -9,39 +9,44 @@ namespace Comandas.Api.Controllers
     [ApiController] // DEFINE QUE ESSA CLASSE É UM CONTROLADOR DE API
     public class CardapioItemController : ControllerBase // HERDA DE ControllerBase para PODER RESPONDER A REQUISICOES HTTP
     {
+        List<CardapioItem> cardapios = new List<CardapioItem>(){
+            new CardapioItem
+            {
+                Id = 1,
+                Descricao = "Coxinha de frango com catupiry",
+                Preco = 5.50m,
+                PossuiPreparo = true
+            },
+            new CardapioItem
+            {
+                Id = 2,
+                Descricao = "X-Salada",
+                Preco = 25.50m,
+                PossuiPreparo = true
+            }
+        };
         // METODO GET que retorna a lista de cardapio
         // GET: api/<CardapioItemController>
         [HttpGet] // ANOTACAO QUE INDICA SE O METODO RESPONDE A REQUISICOES GET
-        public IEnumerable<CardapioItem> Get()
+        public IResult Get()
         {
             // CRIA UMA LISTA ESTATICA DE CARDAPIO e TRANSFORMA EM JSON
-            return new CardapioItem[]
-            {
-               new CardapioItem // CRIA O PRIMEIRO ELEMENTO DA LISTA DE CARDAPIO
-               {
-                    Id = 1,
-                    Titulo = "Coxinha",
-                    Descricao = "Deliciosa coxinha de frango com catupiry",
-                    Preco = 5.50m,
-                    PossuiPreparo = true
-               },
-               new CardapioItem // CRIA O SEGUNDO ELEMENTO DA LISTA DE CARDAPIO
-               {
-                    Id = 2,
-                    Titulo = "X-Salada",
-                    Descricao = "Bife, Alface, cebola, tomate, maionese, mostarda, tempero verde",
-                    Preco = 25.50m,
-                    PossuiPreparo = true
-               },
-
-            };
+            return Results.Ok(cardapios);
         }
 
-        // GET api/<CardapioItemController>/5
+        // GET api/<CardapioItemController>/1
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IResult Get(int id)
         {
-            return "value";
+            // BUSCAR NA LISTA de cardapios de acordo com o Id do parametro
+            // joga o valor para a variavel o primeiro elemento de acordo com o id
+            var cardapio = cardapios.FirstOrDefault(c => c.Id == id);
+            if (cardapio is null)
+            {
+                return Results.NotFound("Cardápio não encontrado!");
+            }
+            // retorna o valor para o endpoint da api
+            return Results.Ok(cardapio);
         }
 
         // POST api/<CardapioItemController>

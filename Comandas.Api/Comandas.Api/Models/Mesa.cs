@@ -6,4 +6,11 @@
         public int NumeroMesa { get; set; }
         public int SituacaoMesa { get; set; }
     }
+
+    public enum SituacaoMesa
+    {
+        Livre = 0,
+        Ocupada = 1,
+        Reservada = 3
+    }
 }
