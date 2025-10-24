@@ -5,33 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Comandas.Api.Controllers
 {
-    // CRIA A ROTA DO CONTROLADOR
+    // CRIA A ROTA DO CONTROLADORc
     [Route("api/[controller]")]
     [ApiController] // DEFINE QUE ESSA CLASSE É UM CONTROLADOR DE API
     public class CardapioItemController : ControllerBase // HERDA DE ControllerBase para PODER RESPONDER A REQUISICOES HTTP
     {
-        static List<CardapioItem> cardapios = new List<CardapioItem>(){
-            new CardapioItem
-            {
-                Id = 1,
-                Descricao = "Coxinha de frango com catupiry",
-                Preco = 5.50m,
-                PossuiPreparo = true
-            },
-            new CardapioItem
-            {
-                Id = 2,
-                Descricao = "X-Salada",
-                Preco = 25.50m,
-                PossuiPreparo = true
-            }
-        };
-        // METODO GET que retorna a lista de cardapio
-        // GET: api/<CardapioItemController>
-        [HttpGet] // ANOTACAO QUE INDICA SE O METODO RESPONDE A REQUISICOES GET
+        private readonly ComandasDbContext _context;
+        public CardapioItemController(ComandasDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/cardapioitens
+        [HttpGet]
         public IResult Get()
         {
-            // CRIA UMA LISTA ESTATICA DE CARDAPIO e TRANSFORMA EM JSON
+            var cardapios = _context.CardapioItems.ToList();
             return Results.Ok(cardapios);
         }
 
@@ -41,7 +30,7 @@ namespace Comandas.Api.Controllers
         {
             // BUSCAR NA LISTA de cardapios de acordo com o Id do parametro
             // joga o valor para a variavel o primeiro elemento de acordo com o id
-            var cardapio = cardapios.FirstOrDefault(c => c.Id == id);
+            var cardapio = _context.CardapioItems.FirstOrDefault(c => c.Id == id);
             if (cardapio is null)
             {
                 return Results.NotFound("Cardápio não encontrado!");
@@ -62,14 +51,13 @@ namespace Comandas.Api.Controllers
                 return Results.BadRequest("O preço do item do cardápio deve ser maior que zero.");
             var cardapioItem = new CardapioItem
             {
-                Id = cardapios.Count + 1,
                 Titulo = cardapio.Titulo,
                 Descricao = cardapio.Descricao,
                 Preco = cardapio.Preco,
                 PossuiPreparo = cardapio.PossuiPreparo
             };
             // adiciona o cardapio na lista
-            cardapios.Add(cardapioItem);
+            _context.CardapioItems.Add(cardapioItem);
             return Results.Created($"/api/cardapioitem/{cardapioItem.Id}", cardapioItem);
         }
 
@@ -85,7 +73,7 @@ namespace Comandas.Api.Controllers
         [HttpPut("{id}")]
         public IResult Put(int id, [FromBody] CardapioItemUpdateRequest cardapio)
         {
-            var cardapioItem = cardapios.
+            var cardapioItem = _context.CardapioItems.
                     FirstOrDefault(c => c.Id == id);
             if (cardapioItem is null)
                 return Results.NotFound($"Cardápio {id} não encontrado!");
@@ -93,6 +81,7 @@ namespace Comandas.Api.Controllers
             cardapioItem.Descricao = cardapio.Descricao;
             cardapioItem.Preco = cardapio.Preco;
             cardapioItem.PossuiPreparo = cardapio.PossuiPreparo;
+            _context.SaveChanges();
             return Results.NoContent();
         }
 
@@ -101,18 +90,17 @@ namespace Comandas.Api.Controllers
         public IResult Delete(int id)
         {
             // buscar o cardapio na lista pelo id
-            var cardapioItem = cardapios
+            var cardapioItem = _context.CardapioItems
                 .FirstOrDefault(c => c.Id == id);
             // se estiver nulo, retorna 404
             if (cardapioItem is null)
                 return Results.NotFound($"Cardápio {id} não encontrado!");
             // remove o objeto cardapio da lista
-            var removidoComSucesso = cardapios.Remove(cardapioItem);
-            // retorna 204 sem conteudo
-            if (removidoComSucesso)
-                return Results.NoContent();
+            _context.CardapioItems.Remove(cardapioItem);
 
-            return Results.StatusCode(500);
+            return Results.NoContent();
+
+
         }
     }
 }
