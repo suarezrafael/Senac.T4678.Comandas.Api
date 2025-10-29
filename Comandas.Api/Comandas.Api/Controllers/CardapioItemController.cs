@@ -97,7 +97,7 @@ namespace Comandas.Api.Controllers
                 return Results.NotFound($"Cardápio {id} não encontrado!");
             // remove o objeto cardapio da lista
             _context.CardapioItems.Remove(cardapioItem);
-
+            _context.SaveChanges();
             return Results.NoContent();
 
 
