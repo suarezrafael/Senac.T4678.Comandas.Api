@@ -47,27 +47,37 @@ public class ComandaController : ControllerBase
             NomeCliente = comandaCreate.NomeCliente,
             NumeroMesa = comandaCreate.NumeroMesa,
         };
-        // cria uma variavel do tipo lista de itens
         var comandaItens = new List<ComandaItem>();
-        // percorre os ids dos itens do cardapio
+
         foreach (int cardapioItemId in comandaCreate.CardapioItemIds)
         {
-            // cria um novo item de comanda
             var comandaItem = new ComandaItem
             {
                 CardapioItemId = cardapioItemId,
-                Comanda = novaComanda,
+                Comanda = novaComanda
             };
-            // adiciona o item na lista de itens
+
             comandaItens.Add(comandaItem);
 
-            // Criar o pedido de cozinha e o item de acordo com o cadastro do cardapio possuipreparo
             var cardapioItem = _context.CardapioItems
                 .FirstOrDefault(ci => ci.Id == cardapioItemId);
+
+            if (cardapioItem!.PossuiPreparo)
+            {
+                var pedido = new PedidoCozinha
+                {
+                    Comanda = novaComanda
+                };
+                var pedidoItem = new PedidoCozinhaItem
+                {
+                    ComandaItem = comandaItem,
+                    PedidoCozinha = pedido
+                };
+                _context.PedidoCozinhas.Add(pedido);
+                _context.PedidoCozinhaItens.Add(pedidoItem);
+            }
         }
-        // atribui os itens a nota comanda
         novaComanda.Itens = comandaItens;
-        // adiciona a nova comanda na lista de comandas
         _context.Comandas.Add(novaComanda);
         _context.SaveChanges();
         return Results.Created($"/api/comanda/{novaComanda.Id}", novaComanda);

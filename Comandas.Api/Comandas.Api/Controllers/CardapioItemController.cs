@@ -58,6 +58,7 @@ namespace Comandas.Api.Controllers
             };
             // adiciona o cardapio na lista
             _context.CardapioItems.Add(cardapioItem);
+            _context.SaveChanges();
             return Results.Created($"/api/cardapioitem/{cardapioItem.Id}", cardapioItem);
         }
 
