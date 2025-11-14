@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Comandas.Api.Models;
+
 public class Reserva
 {
     [Key]
@@ -10,4 +11,5 @@ public class Reserva
     public int NumeroMesa { get; set; }
     public string NomeCliente { get; set; } = default!;
     public string Telefone { get; set; } = default!;
+
 }
