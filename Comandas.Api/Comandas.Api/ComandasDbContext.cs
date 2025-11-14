@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Comandas.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Comandas.Api;
 
@@ -22,6 +23,40 @@ public class ComandasDbContext : DbContext
                     Senha = "admin123"
                 }
              );
+        modelBuilder.Entity<Models.CardapioItem>()
+            .HasData(
+                new Models.CardapioItem
+                {
+                    Id = 1,
+                    Titulo = "XIS CARNE",
+                    Descricao = "XIS CARNE",
+                    PossuiPreparo = true,
+                    Preco = 25
+                },
+                new Models.CardapioItem
+                {
+                    Id = 2,
+                    Titulo = "COCA COLA LATA 350ML",
+                    Descricao = "COCA COLA LATA 350ML",
+                    PossuiPreparo = false,
+                    Preco = 6
+                },
+                new Models.CardapioItem
+                {
+                    Id = 3,
+                    Titulo = "TORRADA SIMPLES",
+                    Descricao = "TORRADA SIMPLES",
+                    PossuiPreparo = true,
+                    Preco = 8
+                }
+        );
+        modelBuilder.Entity<Models.Mesa>()
+            .HasData(
+               new Models.Mesa { Id = 1, NumeroMesa = 1, SituacaoMesa = (int)SituacaoMesa.Livre },
+               new Models.Mesa { Id = 2, NumeroMesa = 2, SituacaoMesa = (int)SituacaoMesa.Livre },
+               new Models.Mesa { Id = 3, NumeroMesa = 3, SituacaoMesa = (int)SituacaoMesa.Livre }
+            );
+
         base.OnModelCreating(modelBuilder);
 
     }
