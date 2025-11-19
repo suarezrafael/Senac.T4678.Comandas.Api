@@ -56,7 +56,13 @@ public class ComandasDbContext : DbContext
                new Models.Mesa { Id = 2, NumeroMesa = 2, SituacaoMesa = (int)SituacaoMesa.Livre },
                new Models.Mesa { Id = 3, NumeroMesa = 3, SituacaoMesa = (int)SituacaoMesa.Livre }
             );
-
+        // inserir as categorias no banco na primeira vez
+        modelBuilder.Entity<Models.CategoriaCardapio>()
+            .HasData(
+               new Models.CategoriaCardapio { Id = 1, Nome = "Lanches" },
+               new Models.CategoriaCardapio { Id = 2, Nome = "Bebidas" },
+               new Models.CategoriaCardapio { Id = 3, Nome = "Acompanhamentos" }
+            );
         base.OnModelCreating(modelBuilder);
 
     }
@@ -68,4 +74,5 @@ public class ComandasDbContext : DbContext
     public DbSet<Models.PedidoCozinha> PedidoCozinhas { get; set; } = default!;
     public DbSet<Models.PedidoCozinhaItem> PedidoCozinhaItens { get; set; } = default!;
     public DbSet<Models.CardapioItem> CardapioItems { get; set; } = default!;
+    public DbSet<Models.CategoriaCardapio> CategoriaCardapio { get; set; } = default!;
 }
