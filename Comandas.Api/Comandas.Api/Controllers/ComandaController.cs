@@ -74,6 +74,11 @@ public class ComandaController : ControllerBase
             NomeCliente = comandaCreate.NomeCliente,
             NumeroMesa = comandaCreate.NumeroMesa,
         };
+
+        var mesa = _context.Mesas
+            .FirstOrDefault(m => m.NumeroMesa == comandaCreate.NumeroMesa);
+        mesa.SituacaoMesa = 2; // ocupada
+
         var comandaItens = new List<ComandaItem>();
 
         foreach (int cardapioItemId in comandaCreate.CardapioItemIds)
